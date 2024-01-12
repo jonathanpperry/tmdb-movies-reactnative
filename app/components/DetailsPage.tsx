@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { ImageBackground } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { H1, Image, Main, Paragraph, ScrollView, Text, YStack } from 'tamagui';
 
 import { MediaType } from '@/interfaces/apiresults';
@@ -23,12 +24,12 @@ const DetailsPage = ({ id, mediaType }: DetailsPageProps) => {
           source={{
             uri: `https://image.tmdb.org/t/p/w400${movieQuery.data?.backdrop_path}`,
           }}>
-          <Image
+          <Animated.Image
             source={{
               uri: `https://image.tmdb.org/t/p/w400${movieQuery.data?.poster_path}`,
             }}
-            w={200}
-            h={300}
+            style={{ width: 200, height: 300, margin: 10 }}
+            sharedTransitionTag={`${mediaType === 'movie' ? 'movie' : 'tv'}-${id}`}
           />
         </ImageBackground>
 
