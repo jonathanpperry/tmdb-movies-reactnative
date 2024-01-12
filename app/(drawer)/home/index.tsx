@@ -4,19 +4,23 @@ import { ImageBackground } from 'react-native';
 import { Input, ScrollView, Spinner, YStack } from 'tamagui';
 
 import MovieCard from '@/app/components/MovieCard';
-import { getTrending } from '@/services/api';
+import { getSearchResults, getTrending } from '@/services/api';
 import { Container, Main, Subtitle, Title } from '@/tamagui.config';
+import useDebounce from '@/utils/useDebounce';
 
 const Page = () => {
   const [searchString, setSearchString] = useState('');
+  const debouncedString = useDebounce(searchString, 500);
+
   const trendingQuery = useQuery({
     queryKey: ['trending'],
     queryFn: getTrending,
   });
 
   const searchQuery = useQuery({
-    queryKey: ['trending'],
-    queryFn: getTrending,
+    queryKey: ['search', debouncedString],
+    queryFn: () => getSearchResults(debouncedString),
+    enabled: debouncedString.length > 0,
   });
 
   return (
