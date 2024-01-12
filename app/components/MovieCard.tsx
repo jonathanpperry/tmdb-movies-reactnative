@@ -1,8 +1,8 @@
 import { Link } from 'expo-router';
-import { Card, Image, Paragraph, Text, YStack } from 'tamagui';
+import Animated from 'react-native-reanimated';
+import { Card, Paragraph, Text, YStack } from 'tamagui';
 
 import { ResultItem } from '@/interfaces/apiresults';
-import Animated from 'react-native-reanimated';
 
 type MovieCardProps = {
   movie: ResultItem;
@@ -25,7 +25,7 @@ const MovieCard = ({ movie }: MovieCardProps) => (
           source={{ uri: `https://image.tmdb.org/t/p/w200${movie.poster_path}` }}
           alt={movie.title}
           style={{ width: 150, height: 200 }}
-          sharedTransitionTag={`${movie.media_type === 'movie' ? 'movie' : 'tv'}-${movie.id}`}
+          ationTag={`${movie.media_type === 'movie' ? 'movie' : 'tv'}-${movie.id}`}
         />
       </Card.Header>
       <Card.Footer p={8}>

@@ -1,10 +1,14 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
+import { Stack } from 'expo-router';
 import React from 'react';
 import { ImageBackground } from 'react-native';
+import { useMMKVBoolean, useMMKVObject } from 'react-native-mmkv';
 import Animated from 'react-native-reanimated';
-import { H1, Image, Main, Paragraph, ScrollView, Text, YStack } from 'tamagui';
+import { Button, H1, Main, Paragraph, ScrollView, Text, YStack, useTheme } from 'tamagui';
 
 import { MediaType } from '@/interfaces/apiresults';
+import { Favorite } from '@/interfaces/favorites';
 import { getMovieDetails } from '@/services/api';
 
 type DetailsPageProps = {
@@ -13,12 +17,50 @@ type DetailsPageProps = {
 };
 
 const DetailsPage = ({ id, mediaType }: DetailsPageProps) => {
+  const [isFavorite, setIsFavorite] = useMMKVBoolean(`${mediaType}-${id}`);
+  const [favorites, setFavorites] = useMMKVObject<Favorite[]>('favorites');
+  const theme = useTheme();
+
   const movieQuery = useQuery({
     queryKey: ['movie', id],
     queryFn: () => getMovieDetails(+id, mediaType),
   });
+
+  const toggleFavorite = () => {
+    const current = favorites || [];
+
+    if (!isFavorite) {
+      setFavorites([
+        ...current,
+        {
+          id,
+          mediaType,
+          thumb: movieQuery.data?.poster_path,
+          name: movieQuery.data?.title || movieQuery.data?.name,
+        },
+      ]);
+    } else {
+      setFavorites(current.filter((fav) => fav.id !== id || fav.mediaType !== mediaType));
+    }
+
+    setIsFavorite(!isFavorite);
+  };
+
   return (
     <Main>
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <Button unstyled onPress={toggleFavorite}>
+              <Ionicons
+                name={isFavorite ? 'heart' : 'heart-outline'}
+                size={26}
+                color={theme.blue9.get()}
+              />
+            </Button>
+          ),
+        }}
+      />
       <ScrollView>
         <ImageBackground
           source={{
