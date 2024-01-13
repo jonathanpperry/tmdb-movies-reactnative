@@ -51,7 +51,13 @@ const DetailsPage = ({ id, mediaType }: DetailsPageProps) => {
       <Stack.Screen
         options={{
           headerRight: () => (
-            <Button unstyled onPress={toggleFavorite}>
+            <Button
+              unstyled
+              onPress={toggleFavorite}
+              scale={0.95}
+              hoverStyle={{ scale: 0.925 }}
+              pressStyle={{ scale: 0.975 }}
+              animation="bouncy">
               <Ionicons
                 name={isFavorite ? 'heart' : 'heart-outline'}
                 size={26}
